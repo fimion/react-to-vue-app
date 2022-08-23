@@ -5,7 +5,8 @@ import {ref, reactive, defineComponent, h} from "vue"
 
 let todoCount = 0;
 const newTodo = (item) => ({id:++todoCount, done:false, item });
-const App = defineComponent(function() {
+const App = defineComponent({
+  setup() {
 
     const todos = reactive([]);
     const showArchived = ref(false);
@@ -30,29 +31,40 @@ const App = defineComponent(function() {
 
     }
 
-    return ()=>(
-        <div className="App">
-          <header className="App-header">
-            <h1>My Todo List</h1>
-          </header>
-          <form onSubmit={handleSubmit} className="add-item">
-            <label htmlFor="item">New Todo</label>
-            <input type="text" name="item" id="item" />
-            <button>ADD!</button>
-          </form>
-          <label><input type={'checkbox'} onChange={()=>updateShowArchived(!showArchived.value)} checked={showArchived.value} />Show Finished</label>
-          <ul>
-            {todos.filter((e)=>e.done===showArchived.value).map((todo, index) => (<li key={todo.id}>
-              {!showArchived.value && (<button onClick={()=>markDone(todo)}>
-                <span aria-hidden="true">✔</span>
-                <span className="sr-only">Mark Done</span>
-              </button>)} {todo.id} - {todo.item}
-            </li>))}
-          </ul>
-        </div>
-    )
-  });
+    return {
+      todos,
+      showArchived,
+      updateShowArchived,
+      addTodo,
+      markDone,
+      handleSubmit,
+    }
+  }
+});
 export default App
 </script>
+<template>
+  <div class="App">
+    <header class="App-header">
+      <h1>My Todo List</h1>
+    </header>
+    <form @submit="handleSubmit" class="add-item">
+      <label for="item">New Todo</label>
+      <input type="text" name="item" id="item" />
+      <button>ADD!</button>
+    </form>
+    <label><input type="checkbox"
+                  @change="updateShowArchived(!showArchived)"
+                  :checked="showArchived">Show Finished</label>
+    <ul>
+      <li v-for="todo in todos.filter((e)=>e.done===showArchived)" :key="todo.id" >
+      <button v-if="!showArchived" @click="markDone(todo)">
+      <span aria-hidden="true">✔</span>
+      <span class="sr-only">Mark Done</span>
+    </button> {{todo.id}} - {{todo.item}}
+    </li>
+    </ul>
+  </div>
+</template>
 <style scoped src="./App.css" />
 
