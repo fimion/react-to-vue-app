@@ -1,7 +1,7 @@
 // import React from 'react'
 // import ReactDOM from 'react-dom/client'
 import {createApp} from "vue"
-import App from './App'
+import App from './App.vue'
 import './index.css'
 
 // ReactDOM.createRoot(document.getElementById('root')).render(
