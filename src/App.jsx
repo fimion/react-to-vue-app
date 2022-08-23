@@ -4,14 +4,9 @@ import './App.css'
 let todoCount = 0;
 
 function App() {
-
-  
-  
-
   const newTodo = (item) => ({id:++todoCount, done:false, item });
-
   const [todos, updateTodos] = useState([newTodo('Make todo list')]);
-  
+  const [showArchived, updateShowArchived] = useState(false);
   const addTodo = (item) => {
     updateTodos([...todos, newTodo(item)]);
   }
@@ -31,7 +26,7 @@ function App() {
     e.target.reset();
 
   }
-  
+
   return (
     <div className="App">
       <header className="App-header">
@@ -42,13 +37,13 @@ function App() {
         <input type="text" name="item" id="item" />
         <button>ADD!</button>
       </form>
-
+      <label><input type={'checkbox'} onChange={()=>updateShowArchived(!showArchived)} checked={showArchived} />Show Finished</label>
       <ul>
-        {todos.filter((e)=>!e.done).map((todo, index) => (<li key={todo.id}>
-          <button onClick={()=>markDone(todo, index)}>
+        {todos.filter((e)=>e.done===showArchived).map((todo, index) => (<li key={todo.id}>
+          {!showArchived && (<button onClick={()=>markDone(todo, index)}>
             <span aria-hidden="true">✔</span>
             <span className="sr-only">Mark Done</span>
-          </button> {todo.item}
+          </button>)} {todo.item}
         </li>))}
       </ul>
     </div>
