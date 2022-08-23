@@ -1,29 +1,23 @@
+/** @jsx h */
 import {ref, reactive, defineComponent, h} from "vue"
 import './App.css'
-/** @jsx h */
+
 
 let todoCount = 0;
 const newTodo = (item) => ({id:++todoCount, done:false, item });
 const App = defineComponent(function() {
 
-  //const [todos, updateTodos] = useState([]);
-  //const [showArchived, updateShowArchived] = useState(false);
-  const todos = ref([]);
-  const updateTodos = (value)=>todos.value = value;
+  const todos = reactive([]);
   const showArchived = ref(false);
   const updateShowArchived = (value)=>showArchived.value=value;
 
   const addTodo = (item) => {
     const myTodo = newTodo(item);
-    console.log(myTodo)
-    updateTodos([...todos.value, myTodo]);
+    todos.push(myTodo);
   }
 
   const markDone = (todo)=>{
     todo.done = true;
-    const index = todos.value.indexOf(todo);
-    todos.value[index] = { ...todo };
-    updateTodos([...todos.value]);
   }
 
   const handleSubmit = (e) => {
@@ -48,7 +42,7 @@ const App = defineComponent(function() {
       </form>
       <label><input type={'checkbox'} onChange={()=>updateShowArchived(!showArchived.value)} checked={showArchived.value} />Show Finished</label>
       <ul>
-        {todos.value.filter((e)=>e.done===showArchived.value).map((todo, index) => (<li key={todo.id}>
+        {todos.filter((e)=>e.done===showArchived.value).map((todo, index) => (<li key={todo.id}>
           {!showArchived.value && (<button onClick={()=>markDone(todo)}>
             <span aria-hidden="true">✔</span>
             <span className="sr-only">Mark Done</span>
