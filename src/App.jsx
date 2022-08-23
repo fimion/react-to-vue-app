@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import {ref, reactive, defineComponent} from "vue"
 import './App.css'
+
 
 let todoCount = 0;
 const newTodo = (item) => ({id:++todoCount, done:false, item });
-function App() {
+const App = defineComponent(function() {
 
   const [todos, updateTodos] = useState([]);
   const [showArchived, updateShowArchived] = useState(false);
@@ -30,7 +32,7 @@ function App() {
 
   }
 
-  return (
+  return ()=>(
     <div className="App">
       <header className="App-header">
         <h1>My Todo List</h1>
@@ -51,6 +53,6 @@ function App() {
       </ul>
     </div>
   )
-}
+});
 
 export default App
