@@ -1,6 +1,6 @@
 <script lang="jsx">
 /** @jsx h */
-import {ref, reactive, defineComponent, h} from "vue"
+import {ref, reactive, defineComponent, h, computed} from "vue"
 
 
 let todoCount = 0;
@@ -9,9 +9,15 @@ const App = defineComponent({
   setup() {
 
     const todos = reactive([]);
+
+
     const showArchived = ref(false);
     const updateShowArchived = (value)=>showArchived.value=value;
-
+    const filteredTodos = computed(()=>{
+      const filtered = todos.filter((e)=>e.done===showArchived.value);
+      console.log(...filtered);
+      return filtered;
+    })
     const addTodo = (item) => {
       const myTodo = newTodo(item);
       todos.push(myTodo);
@@ -38,6 +44,7 @@ const App = defineComponent({
       addTodo,
       markDone,
       handleSubmit,
+      filteredTodos,
     }
   }
 });
@@ -57,7 +64,7 @@ export default App
                   @change="updateShowArchived(!showArchived)"
                   :checked="showArchived">Show Finished</label>
     <ul>
-      <li v-for="todo in todos.filter((e)=>e.done===showArchived)" :key="todo.id" >
+      <li v-for="todo in filteredTodos" :key="todo.id" >
       <button v-if="!showArchived" @click="markDone(todo)">
       <span aria-hidden="true">✔</span>
       <span class="sr-only">Mark Done</span>
