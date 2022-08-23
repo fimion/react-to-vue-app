@@ -2,17 +2,20 @@ import { useState } from 'react'
 import './App.css'
 
 let todoCount = 0;
-
+const newTodo = (item) => ({id:++todoCount, done:false, item });
 function App() {
-  const newTodo = (item) => ({id:++todoCount, done:false, item });
-  const [todos, updateTodos] = useState([newTodo('Make todo list')]);
+
+  const [todos, updateTodos] = useState([]);
   const [showArchived, updateShowArchived] = useState(false);
   const addTodo = (item) => {
-    updateTodos([...todos, newTodo(item)]);
+    const myTodo = newTodo(item);
+    console.log(myTodo)
+    updateTodos([...todos, myTodo]);
   }
 
-  const markDone = (todo, index)=>{
+  const markDone = (todo)=>{
     todo.done = true;
+    const index = todos.indexOf(todo);
     todos[index] = { ...todo };
     updateTodos([...todos]);
   }
@@ -40,10 +43,10 @@ function App() {
       <label><input type={'checkbox'} onChange={()=>updateShowArchived(!showArchived)} checked={showArchived} />Show Finished</label>
       <ul>
         {todos.filter((e)=>e.done===showArchived).map((todo, index) => (<li key={todo.id}>
-          {!showArchived && (<button onClick={()=>markDone(todo, index)}>
+          {!showArchived && (<button onClick={()=>markDone(todo)}>
             <span aria-hidden="true">✔</span>
             <span className="sr-only">Mark Done</span>
-          </button>)} {todo.item}
+          </button>)} {todo.id} - {todo.item}
         </li>))}
       </ul>
     </div>
